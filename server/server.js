@@ -1,15 +1,21 @@
-// Imports the Express application from app.js
+// Imports the Express application
 const app = require("./app");
 
-// Reads the PORT number from the .env file
-// If PORT is not found, it uses 5000 by default
+// Imports the MongoDB connection function
+const connectDB = require("./config/db");
+
+// Loads environment variables from the .env file
+require("dotenv").config();
+
+// Connect to MongoDB
+connectDB();
+
+// Reads the PORT from the .env file
 const PORT = process.env.PORT || 5000;
 
-
-// Starts the backend server
+// Starts the server
 app.listen(PORT, () => {
 
-    // Prints this message once the server starts successfully
     console.log(`🚀 Server running on http://localhost:${PORT}`);
 
 });

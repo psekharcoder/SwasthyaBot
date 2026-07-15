@@ -1,5 +1,7 @@
 // Imports the Express framework to create the backend server
 const express = require("express");
+// Authentication Routes
+const authRoutes = require("./routes/authRoutes");
 
 // Allows the frontend (Angular) and backend (Express) to communicate
 // even if they run on different ports (e.g., Angular:4200, Express:5000)
@@ -31,6 +33,8 @@ app.use(cors());
 // req.body.email
 // req.body.password
 app.use(express.json());
+// Register authentication routes
+app.use("/api/auth", authRoutes);
 
 
 // =====================
