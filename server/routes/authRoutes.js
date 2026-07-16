@@ -8,18 +8,22 @@ const {
 
     signup,
 
-    login
+    login,
+
+    verifyOTP
 
 } = require("../controllers/authController");
 
 // Import JWT Authentication Middleware
 const authMiddleware = require("../middleware/authMiddleware");
 
+
 // ============================
 // Signup Route
 // ============================
 
 // POST /api/auth/signup
+// Registers a new user and sends an OTP to their email.
 router.post("/signup", signup);
 
 
@@ -28,19 +32,26 @@ router.post("/signup", signup);
 // ============================
 
 // POST /api/auth/login
+// Allows only verified users to log in and receive a JWT token.
 router.post("/login", login);
 
+
 // ============================
-// Login Route
+// Verify OTP Route
 // ============================
 
-router.post("/login", login);
+// POST /api/auth/verify-otp
+// Verifies the OTP entered by the user and activates the account.
+router.post("/verify-otp", verifyOTP);
+
 
 // =======================================
 // Protected Route
 // Only accessible with a valid JWT Token
 // =======================================
 
+// GET /api/auth/profile
+// Returns the logged-in user's information.
 router.get("/profile", authMiddleware, (req, res) => {
 
     res.json({
@@ -54,9 +65,6 @@ router.get("/profile", authMiddleware, (req, res) => {
     });
 
 });
-
-// Export Router
-module.exports = router;
 
 
 // Export Router

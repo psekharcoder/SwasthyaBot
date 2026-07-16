@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema(
 
         },
 
-        // Password (will be encrypted using bcrypt)
+        // Password (Stored in encrypted form using bcrypt)
         password: {
 
             type: String,
@@ -42,13 +42,40 @@ const userSchema = new mongoose.Schema(
 
             default: "user"
 
+        },
+
+        // Indicates whether the user's email has been verified
+        isVerified: {
+
+            type: Boolean,
+
+            default: false
+
+        },
+
+        // Stores the latest OTP sent to the user
+        otp: {
+
+            type: String,
+
+            default: null
+
+        },
+
+        // Stores the OTP expiry time
+        otpExpiry: {
+
+            type: Date,
+
+            default: null
+
         }
 
     },
 
     {
 
-        // Automatically stores createdAt and updatedAt
+        // Automatically creates createdAt and updatedAt fields
         timestamps: true
 
     }

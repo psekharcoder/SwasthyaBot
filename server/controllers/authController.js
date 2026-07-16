@@ -7,6 +7,9 @@ const bcrypt = require("bcryptjs");
 // Import JWT to generate authentication tokens
 const jwt = require("jsonwebtoken");
 
+// Import Email Utility
+const sendEmail = require("../utils/sendEmail");
+
 // Signup Controller
 const signup = async (req, res) => {
 
@@ -43,36 +46,59 @@ const signup = async (req, res) => {
 
         }
 
-        // ============================
-        // Hash the password
-        // ============================
-
-        // bcrypt converts the original password into an encrypted hash.
-        // The number 10 represents the salt rounds.
-        // Higher rounds = stronger security but slower hashing.
+        // Encrypt password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create new user object
+        // Generate a random 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+        // OTP expires after 5 minutes
+        const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+
+        // Create new user
         const user = new User({
 
             name,
 
             email,
 
-            // Store hashed password instead of plain text
-            password: hashedPassword
+            password: hashedPassword,
+
+            otp,
+
+            otpExpiry,
+
+            isVerified: false
 
         });
 
-        // Save user into MongoDB
+        // Save user
         await user.save();
 
-        // Send success response
+        // Send OTP Email
+        await sendEmail(
+
+            email,
+
+            "SwasthyaBot Email Verification",
+
+            `Hello ${name},
+
+Your OTP for SwasthyaBot is:
+
+${otp}
+
+This OTP is valid for 5 minutes.
+
+Do not share this OTP with anyone.`
+
+        );
+
         res.status(201).json({
 
             success: true,
 
-            message: "User registered successfully."
+            message: "Signup Successful. Please verify your email using the OTP."
 
         });
 
@@ -93,6 +119,8 @@ const signup = async (req, res) => {
     }
 
 };
+
+
 // ==============================
 // Login Controller
 // ==============================
@@ -100,10 +128,8 @@ const login = async (req, res) => {
 
     try {
 
-        // Extract email and password from request body
         const { email, password } = req.body;
 
-        // Check whether both fields are provided
         if (!email || !password) {
 
             return res.status(400).json({
@@ -116,10 +142,8 @@ const login = async (req, res) => {
 
         }
 
-        // Find user using email
         const user = await User.findOne({ email });
 
-        // If user does not exist
         if (!user) {
 
             return res.status(404).json({
@@ -132,10 +156,21 @@ const login = async (req, res) => {
 
         }
 
-        // Compare entered password with hashed password stored in MongoDB
+        // Prevent login if email is not verified
+        if (!user.isVerified) {
+
+            return res.status(401).json({
+
+                success: false,
+
+                message: "Please verify your email before logging in."
+
+            });
+
+        }
+
         const isMatch = await bcrypt.compare(password, user.password);
 
-        // If password is incorrect
         if (!isMatch) {
 
             return res.status(401).json({
@@ -148,24 +183,28 @@ const login = async (req, res) => {
 
         }
 
-        // Generate JWT Token
         const token = jwt.sign(
 
             {
+
                 id: user._id,
+
                 email: user.email,
+
                 role: user.role
+
             },
 
             process.env.JWT_SECRET,
 
             {
+
                 expiresIn: "7d"
+
             }
 
         );
 
-        // Send success response
         res.status(200).json({
 
             success: true,
@@ -193,11 +232,100 @@ const login = async (req, res) => {
     }
 
 };
+// ==============================
+// Verify OTP Controller
+// ==============================
+const verifyOTP = async (req, res) => {
 
-// Export Signup Controller
+    try {
+
+        // Get email and otp from request
+        const { email, otp } = req.body;
+
+        // Check if both fields are provided
+        if (!email || !otp) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Email and OTP are required."
+            });
+
+        }
+
+        // Find user by email
+        const user = await User.findOne({ email });
+
+        if (!user) {
+
+            return res.status(404).json({
+                success: false,
+                message: "User not found."
+            });
+
+        }
+
+        // Check if already verified
+        if (user.isVerified) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Email already verified."
+            });
+
+        }
+
+        // Check OTP
+        if (user.otp !== otp) {
+
+            return res.status(400).json({
+                success: false,
+                message: "Invalid OTP."
+            });
+
+        }
+
+        // Check OTP Expiry
+        if (user.otpExpiry < new Date()) {
+
+            return res.status(400).json({
+                success: false,
+                message: "OTP has expired."
+            });
+
+        }
+
+        // Mark verified
+        user.isVerified = true;
+        user.otp = null;
+        user.otpExpiry = null;
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Email verified successfully."
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+
+    }
+
+};
+
 module.exports = {
 
     signup,
-    login
+
+    login,
+    verifyOTP
 
 };
