@@ -6,13 +6,11 @@ const authMiddleware = (req, res, next) => {
 
     try {
 
-        // Read JWT token from the Authorization header
-        // Example Header:
-        // Authorization: eyJhbGc...
-        const token = req.header("Authorization");
+        // Get Authorization header
+        const authHeader = req.header("Authorization");
 
-        // Check whether the token exists
-        if (!token) {
+        // Check if Authorization header exists
+        if (!authHeader) {
 
             return res.status(401).json({
 
@@ -24,15 +22,17 @@ const authMiddleware = (req, res, next) => {
 
         }
 
-        // Verify the token using the secret key stored in .env
-        // If the token is fake or expired, this line throws an error.
+        // Extract token from "Bearer <token>"
+        const token = authHeader.startsWith("Bearer ")
+            ? authHeader.split(" ")[1]
+            : authHeader;
+
+        // Verify JWT
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-        // Store the decoded user information inside the request object.
-        // This allows future controllers to know who the logged-in user is.
+        // Store decoded user
         req.user = decoded;
 
-        // Move to the next middleware or controller
         next();
 
     }
@@ -51,5 +51,4 @@ const authMiddleware = (req, res, next) => {
 
 };
 
-// Export middleware
 module.exports = authMiddleware;

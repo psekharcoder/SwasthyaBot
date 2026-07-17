@@ -2,6 +2,8 @@
 const express = require("express");
 // Authentication Routes
 const authRoutes = require("./routes/authRoutes");
+// Chatbot Routes
+const chatbotRoutes = require("./routes/chatbotRoutes");
 
 // Allows the frontend (Angular) and backend (Express) to communicate
 // even if they run on different ports (e.g., Angular:4200, Express:5000)
@@ -35,6 +37,8 @@ app.use(cors());
 app.use(express.json());
 // Register authentication routes
 app.use("/api/auth", authRoutes);
+// Register chatbot routes
+app.use("/api/chat", chatbotRoutes);
 
 
 // =====================
