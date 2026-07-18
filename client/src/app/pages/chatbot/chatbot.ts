@@ -1,6 +1,9 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MarkdownModule } from 'ngx-markdown';
+import { Navbar } from '../../components/navbar/navbar';
+import { MessageComponent } from '../../components/message/message';
+import { Sidebar } from '../../components/sidebar/sidebar';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -23,7 +26,13 @@ import { CommonModule } from '@angular/common';
 
     MatButtonModule,
 
-    MarkdownModule
+    MarkdownModule,
+
+    Navbar,
+
+    MessageComponent,
+
+    Sidebar
 
   ],
   templateUrl: './chatbot.html',
@@ -41,6 +50,18 @@ export class Chatbot {
 
   chatBody!: ElementRef;
 
+
+  startNewChat() {
+
+  this.messages = [];
+  this.message = "";
+
+  setTimeout(() => {
+    this.chatBody.nativeElement.scrollTop = 0;
+  }, 100);
+
+}
+
   constructor(
 
     private api: ApiService
@@ -55,10 +76,11 @@ export class Chatbot {
 
       sender: 'user',
 
-      text: this.message      
+      text: this.message
 
 
     });
+
 
     this.scrollToBottom();
 
@@ -107,6 +129,11 @@ export class Chatbot {
     });
 
   }
+
+  selectSuggestion(question: string) {
+    this.message = question;
+  }
+
   private scrollToBottom() {
 
     setTimeout(() => {

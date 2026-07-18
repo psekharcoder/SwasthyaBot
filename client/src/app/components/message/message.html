@@ -1,1 +1,11 @@
-<p>message works!</p>
+<div class="message" [ngClass]="msg.sender">
+
+    <div class="avatar">
+        {{ msg.sender === 'bot' ? '🤖' : '😊' }}
+    </div>
+
+    <div class="bubble">
+        <markdown [data]="msg.text"></markdown>
+    </div>
+
+</div>

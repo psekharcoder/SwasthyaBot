@@ -1,71 +1,103 @@
-<div class="chat-container">
+<div class="layout">
 
-    <!-- Header -->
-    <div class="chat-header">
+  <!-- Sidebar -->
+  <app-sidebar (newChatClicked)="startNewChat()">
+  </app-sidebar>
 
-        <div class="logo">
-            🩺 SwasthyaBot
+  <div class="main">
+
+    <!-- Navbar -->
+    <app-navbar></app-navbar>
+
+    <!-- Chat Area -->
+    <div class="chat-container">
+
+      <!-- Chat Body -->
+      <div class="chat-body" #chatBody>
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" *ngIf="messages.length === 0">
+
+          <div class="welcome-icon">
+            🩺
+          </div>
+
+          <h1>Welcome to SwasthyaBot</h1>
+
+          <p>Your AI Healthcare Assistant</p>
+
+          <div class="suggestions">
+
+            <div class="card" (click)="selectSuggestion('What are the common symptoms of fever?')">
+              🤒 Symptoms
+            </div>
+
+            <div class="card" (click)="selectSuggestion('Suggest a healthy diet plan.')">
+              🍎 Diet
+            </div>
+
+            <div class="card" (click)="selectSuggestion('How can I improve my fitness?')">
+              🏃 Fitness
+            </div>
+
+            <div class="card" (click)="selectSuggestion('Tell me about common medicines for cold and fever.')">
+              💊 Medicines
+            </div>
+
+            <div class="card" (click)="selectSuggestion('How can I improve my mental health?')">
+              🧠 Mental Health
+            </div>
+
+            <div class="card" (click)="selectSuggestion('Give me tips for a healthy lifestyle.')">
+              ❤️ Healthy Lifestyle
+            </div>
+
+          </div>
+
+          <span class="welcome-footer">
+            Start by asking your first health question...
+          </span>
+
         </div>
-
-        <div class="status">
-            🟢 Online
-        </div>
-
-    </div>
-
-    <!-- Chat Body -->
-    <div class="chat-body" #chatBody>
 
         <!-- Messages -->
-        <div *ngFor="let msg of messages" class="message" [ngClass]="msg.sender">
+        <app-message *ngFor="let msg of messages" [msg]="msg">
+        </app-message>
 
-            <div class="avatar">
-                {{ msg.sender === 'bot' ? '🤖' : '😊' }}
-            </div>
-
-            <div class="bubble">
-
-                <markdown [data]="msg.text"></markdown>
-
-            </div>
-
-        </div>
-
-        <!-- Typing Animation -->
+        <!-- Typing -->
         <div class="message bot" *ngIf="isTyping">
 
-            <div class="avatar">
-                🤖
-            </div>
+          <div class="avatar">
+            🤖
+          </div>
 
-            <div class="bubble typing">
-
-                <span></span>
-                <span></span>
-                <span></span>
-
-            </div>
+          <div class="bubble typing">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
 
         </div>
 
-    </div>
+      </div>
 
-    <!-- Footer -->
-    <div class="chat-footer">
+      <!-- Footer -->
+      <div class="chat-footer">
 
         <mat-form-field appearance="outline" class="message-box">
 
-            <input matInput placeholder="Ask your health question..." [(ngModel)]="message"
-                (keyup.enter)="sendMessage()">
+          <input matInput placeholder="Ask your health question..." [(ngModel)]="message" (keyup.enter)="sendMessage()">
 
         </mat-form-field>
 
         <button mat-fab color="primary" (click)="sendMessage()">
-
-            🚀
-
+          ➤
         </button>
 
+      </div>
+
     </div>
+
+  </div>
 
 </div>

@@ -39,4 +39,26 @@ export class ApiService {
   );
 
 }
+
+getHistory(token: string) {
+
+  return this.http.get(
+
+    `${this.api}/chat/history`,
+
+    {
+
+      headers: {
+
+        Authorization: `Bearer ${token}`
+
+      }
+
+    }
+
+  );
+
+}
+
+
 }

@@ -1,0 +1,33 @@
+/* HEADER */
+
+.chat-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px 30px;
+
+    color:white;
+
+    background:linear-gradient(135deg,#1976d2,#512da8);
+
+    box-shadow:0 3px 12px rgba(0,0,0,.2);
+
+}
+
+.logo{
+
+    font-size:24px;
+
+    font-weight:bold;
+
+}
+
+.status{
+
+    font-size:14px;
+
+}
