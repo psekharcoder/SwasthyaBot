@@ -2,6 +2,8 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 
+import { provideMarkdown } from 'ngx-markdown';
+
 import { routes } from './app.routes';
 
 export const appConfig: ApplicationConfig = {
@@ -12,7 +14,9 @@ export const appConfig: ApplicationConfig = {
 
     provideRouter(routes),
 
-    provideHttpClient()
+    provideHttpClient(),
+
+    provideMarkdown()
 
   ]
 

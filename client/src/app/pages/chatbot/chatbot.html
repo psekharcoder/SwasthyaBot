@@ -1,1 +1,71 @@
-<p>chatbot works!</p>
+<div class="chat-container">
+
+    <!-- Header -->
+    <div class="chat-header">
+
+        <div class="logo">
+            🩺 SwasthyaBot
+        </div>
+
+        <div class="status">
+            🟢 Online
+        </div>
+
+    </div>
+
+    <!-- Chat Body -->
+    <div class="chat-body" #chatBody>
+
+        <!-- Messages -->
+        <div *ngFor="let msg of messages" class="message" [ngClass]="msg.sender">
+
+            <div class="avatar">
+                {{ msg.sender === 'bot' ? '🤖' : '😊' }}
+            </div>
+
+            <div class="bubble">
+
+                <markdown [data]="msg.text"></markdown>
+
+            </div>
+
+        </div>
+
+        <!-- Typing Animation -->
+        <div class="message bot" *ngIf="isTyping">
+
+            <div class="avatar">
+                🤖
+            </div>
+
+            <div class="bubble typing">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="chat-footer">
+
+        <mat-form-field appearance="outline" class="message-box">
+
+            <input matInput placeholder="Ask your health question..." [(ngModel)]="message"
+                (keyup.enter)="sendMessage()">
+
+        </mat-form-field>
+
+        <button mat-fab color="primary" (click)="sendMessage()">
+
+            🚀
+
+        </button>
+
+    </div>
+
+</div>

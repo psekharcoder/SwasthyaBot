@@ -13,4 +13,30 @@ export class ApiService {
   login(data: any) {
     return this.http.post(`${this.api}/auth/login`, data);
   }
+
+  chat(message: string, token: string) {
+
+  return this.http.post(
+
+    `${this.api}/chat`,
+
+    {
+
+      message
+
+    },
+
+    {
+
+      headers: {
+
+        Authorization: `Bearer ${token}`
+
+      }
+
+    }
+
+  );
+
+}
 }
