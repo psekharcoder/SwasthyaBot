@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../services/api';
+import { Chat } from '../../services/chat';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,15 +16,16 @@ export class Sidebar implements OnInit {
 
   @Output() newChatClicked = new EventEmitter<void>();
 
-newChat() {
+  newChat() {
 
-  this.newChatClicked.emit();
+    this.newChatClicked.emit();
 
-}
+  }
 
   constructor(
-    private api: ApiService
-  ) {}
+    private api: ApiService,
+    public chat: Chat
+  ) { }
 
   ngOnInit() {
 

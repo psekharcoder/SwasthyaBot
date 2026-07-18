@@ -16,7 +16,7 @@
       <div class="chat-body" #chatBody>
 
         <!-- Welcome Screen -->
-        <div class="welcome-screen" *ngIf="messages.length === 0">
+        <div class="welcome-screen" *ngIf="chat.currentChat.messages.length === 0">
 
           <div class="welcome-icon">
             🩺
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Messages -->
-        <app-message *ngFor="let msg of messages" [msg]="msg">
+        <app-message *ngFor="let msg of chat.currentChat.messages" [msg]="msg">
         </app-message>
 
         <!-- Typing -->

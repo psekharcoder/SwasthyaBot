@@ -4,6 +4,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { Navbar } from '../../components/navbar/navbar';
 import { MessageComponent } from '../../components/message/message';
 import { Sidebar } from '../../components/sidebar/sidebar';
+import { Chat } from '../../services/chat';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
@@ -44,7 +45,7 @@ export class Chatbot {
 
   isTyping = false;
 
-  messages: Message[] = [];
+  
 
   @ViewChild('chatBody')
 
@@ -53,33 +54,25 @@ export class Chatbot {
 
   startNewChat() {
 
-  this.messages = [];
-  this.message = "";
+    this.chat.clearChat();
+    this.message = "";
 
-  setTimeout(() => {
-    this.chatBody.nativeElement.scrollTop = 0;
-  }, 100);
+    setTimeout(() => {
+      this.chatBody.nativeElement.scrollTop = 0;
+    }, 100);
 
-}
+  }
 
   constructor(
-
-    private api: ApiService
-
+    private api: ApiService,
+    public chat: Chat
   ) { }
 
   sendMessage() {
 
     if (!this.message.trim()) return;
 
-    this.messages.push({
-
-      sender: 'user',
-
-      text: this.message
-
-
-    });
+    this.chat.addUserMessage(this.message);
 
 
     this.scrollToBottom();
@@ -106,13 +99,7 @@ export class Chatbot {
 
         this.isTyping = false;
 
-        this.messages.push({
-
-          sender: 'bot',
-
-          text: res.reply
-
-        });
+        this.chat.addBotMessage(res.reply);
 
         this.scrollToBottom();
 

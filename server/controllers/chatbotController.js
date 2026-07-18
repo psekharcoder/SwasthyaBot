@@ -42,11 +42,12 @@ const chatWithAI = async (req, res) => {
 
             user: req.user.id
 
-        }).sort({
+        })
+            .sort({ createdAt: -1 })
+            .limit(5);
 
-            createdAt: 1
-
-        });
+        // Put them back into chronological order
+        previousChats.reverse();
 
         // ======================================
         // Build Conversation History
@@ -148,7 +149,7 @@ Always stay within healthcare.
 
         const completion = await client.chat.completions.create({
 
-            model: "llama-3.3-70b-versatile",
+            model: "llama-3.1-8b-instant",
 
             messages
 
@@ -189,6 +190,19 @@ Always stay within healthcare.
     catch (error) {
 
         console.error(error);
+
+        if (error.status === 429) {
+
+            return res.status(429).json({
+
+                success: false,
+
+                message:
+                    "Daily AI limit reached. Please try again later."
+
+            });
+
+        }
 
         res.status(500).json({
 

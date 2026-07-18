@@ -1,22 +1,55 @@
 import { Injectable } from '@angular/core';
 import { Message } from '../models/message';
 
+export interface Conversation {
+
+  id: number;
+
+  title: string;
+
+  messages: Message[];
+
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class Chat {
 
-  // Current conversation
-  messages: Message[] = [];
+  conversations: Conversation[] = [];
 
-  // All conversations
-  history: any[] = [];
+  currentChat!: Conversation;
 
-  constructor() {}
+  constructor() {
+
+    this.createNewChat();
+
+  }
+
+  createNewChat() {
+
+    this.currentChat = {
+
+      id: Date.now(),
+
+      title: 'New Chat',
+
+      messages: []
+
+    };
+
+    this.conversations.unshift(this.currentChat);
+
+  }
 
   addUserMessage(text: string) {
 
-    this.messages.push({
+    if (this.currentChat.messages.length === 0) {
+
+  this.currentChat.title = this.generateTitle(text);
+
+}
+    this.currentChat.messages.push({
 
       sender: 'user',
 
@@ -28,7 +61,7 @@ export class Chat {
 
   addBotMessage(text: string) {
 
-    this.messages.push({
+    this.currentChat.messages.push({
 
       sender: 'bot',
 
@@ -40,8 +73,66 @@ export class Chat {
 
   clearChat() {
 
-    this.messages = [];
+    this.createNewChat();
 
   }
+
+  selectConversation(id: number) {
+
+    const chat = this.conversations.find(c => c.id === id);
+
+    if (chat) {
+
+      this.currentChat = chat;
+
+    }
+
+  }
+
+  private generateTitle(text: string): string {
+
+  const msg = text.toLowerCase();
+
+  if (msg.includes("fever"))
+    return "🤒 Fever";
+
+  if (msg.includes("cough"))
+    return "😷 Cough";
+
+  if (msg.includes("cold"))
+    return "🤧 Cold";
+
+  if (msg.includes("headache"))
+    return "🤕 Headache";
+
+  if (msg.includes("diabetes"))
+    return "🩸 Diabetes";
+
+  if (msg.includes("blood pressure"))
+    return "❤️ Blood Pressure";
+
+  if (msg.includes("heart"))
+    return "❤️ Heart Health";
+
+  if (msg.includes("skin"))
+    return "🧴 Skin Problem";
+
+  if (msg.includes("weight"))
+    return "⚖️ Weight Loss";
+
+  if (msg.includes("diet"))
+    return "🥗 Healthy Diet";
+
+  if (msg.includes("stomach"))
+    return "🤢 Stomach Pain";
+
+  if (msg.includes("anxiety"))
+    return "🧠 Anxiety";
+
+  return text.length > 25
+    ? text.substring(0, 25) + "..."
+    : text;
+
+}
 
 }

@@ -7,11 +7,19 @@
     <div class="menu">
 
         <button class="menu-btn" (click)="newChat()">
+
             ➕ New Chat
+
         </button>
 
-        <button class="menu-btn">
-            🕒 History
+        <h3 class="history-title">
+            Recent Chats
+        </h3>
+
+        <button class="history-item" *ngFor="let conv of chat.conversations" (click)="chat.selectConversation(conv.id)">
+
+            💬 {{ conv.title }}
+
         </button>
 
         <button class="menu-btn">

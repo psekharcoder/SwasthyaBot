@@ -86,3 +86,52 @@
 
     background:#b91c1c;
 }
+.history-title{
+
+    margin-top:20px;
+
+    margin-bottom:10px;
+
+    color:#cbd5e1;
+
+    font-size:14px;
+
+    font-weight:bold;
+
+}
+
+.history-item{
+
+    width:100%;
+
+    border:none;
+
+    background:#334155;
+
+    color:white;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    text-align:left;
+
+    margin-bottom:8px;
+
+    transition:.3s;
+
+    overflow:hidden;
+
+    white-space:nowrap;
+
+    text-overflow:ellipsis;
+
+}
+
+.history-item:hover{
+
+    background:#1976d2;
+
+}
