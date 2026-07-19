@@ -1,1 +1,73 @@
-<p>register works!</p>
+<div class="register-page">
+
+    <mat-card class="register-card">
+
+        <h1>🩺 SwasthyaBot</h1>
+
+        <p>Create your account</p>
+
+        <mat-form-field appearance="outline">
+
+            <mat-label>Full Name</mat-label>
+
+            <input matInput [(ngModel)]="name">
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+
+            <mat-label>Email</mat-label>
+
+            <input matInput type="email" [(ngModel)]="email">
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+
+            <mat-label>Password</mat-label>
+
+            <input matInput type="password" [(ngModel)]="password">
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+
+            <mat-label>Confirm Password</mat-label>
+
+            <input matInput type="password" [(ngModel)]="confirmPassword">
+
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="full-btn" (click)="sendOTP()">
+
+            Send OTP
+
+        </button>
+
+        <mat-form-field appearance="outline">
+
+            <mat-label>Enter OTP</mat-label>
+
+            <input matInput [(ngModel)]="otp">
+
+        </mat-form-field>
+
+        <button mat-raised-button color="accent" class="full-btn" [disabled]="!otpSent" (click)="verifyRegister()">
+
+            Verify & Register
+
+        </button>
+
+        <div class="login-link">
+
+            Already have an account?
+
+            <a routerLink="/login">
+                Login
+            </a>
+
+        </div>
+
+    </mat-card>
+
+</div>

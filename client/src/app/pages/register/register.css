@@ -1,0 +1,85 @@
+.register-page{
+
+    height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:linear-gradient(135deg,#e3f2fd,#bbdefb);
+
+}
+
+.register-card{
+
+    width:430px;
+
+    padding:35px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+    border-radius:18px;
+
+}
+
+h1{
+
+    text-align:center;
+
+    color:#1976d2;
+
+    margin-bottom:0;
+
+}
+
+p{
+
+    text-align:center;
+
+    color:#666;
+
+    margin-top:0;
+
+    margin-bottom:10px;
+
+}
+
+mat-form-field{
+
+    width:100%;
+
+}
+
+.full-btn{
+
+    width:100%;
+
+    height:48px;
+
+    font-size:16px;
+
+}
+
+.login-link{
+
+    text-align:center;
+
+    margin-top:10px;
+
+}
+
+.login-link a{
+
+    color:#1976d2;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+} 

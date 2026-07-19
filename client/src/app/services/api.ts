@@ -8,57 +8,81 @@ export class ApiService {
 
   private api = 'http://localhost:5000/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   login(data: any) {
     return this.http.post(`${this.api}/auth/login`, data);
   }
 
+  signup(data: any) {
+
+    return this.http.post(
+
+      `${this.api}/auth/signup`,
+
+      data
+
+    );
+
+  }
+
+  verifyOTP(data: any) {
+
+    return this.http.post(
+
+      `${this.api}/auth/verify-otp`,
+
+      data
+
+    );
+
+  }
+
   chat(message: string, token: string) {
 
-  return this.http.post(
+    return this.http.post(
 
-    `${this.api}/chat`,
+      `${this.api}/chat`,
 
-    {
+      {
 
-      message
+        message
 
-    },
+      },
 
-    {
+      {
 
-      headers: {
+        headers: {
 
-        Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`
 
-      }
-
-    }
-
-  );
-
-}
-
-getHistory(token: string) {
-
-  return this.http.get(
-
-    `${this.api}/chat/history`,
-
-    {
-
-      headers: {
-
-        Authorization: `Bearer ${token}`
+        }
 
       }
 
-    }
+    );
 
-  );
+  }
 
-}
+  getHistory(token: string) {
+
+    return this.http.get(
+
+      `${this.api}/chat/history`,
+
+      {
+
+        headers: {
+
+          Authorization: `Bearer ${token}`
+
+        }
+
+      }
+
+    );
+
+  }
 
 
 }
