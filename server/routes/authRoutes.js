@@ -10,7 +10,9 @@ const {
 
     login,
 
-    verifyOTP
+    verifyOTP,
+
+    getProfile
 
 } = require("../controllers/authController");
 
@@ -52,20 +54,15 @@ router.post("/verify-otp", verifyOTP);
 
 // GET /api/auth/profile
 // Returns the logged-in user's information.
-router.get("/profile", authMiddleware, (req, res) => {
+router.get(
 
-    res.json({
+    "/profile",
 
-        success: true,
+    authMiddleware,
 
-        message: "Protected Route Accessed Successfully",
+    getProfile
 
-        user: req.user
-
-    });
-
-});
-
+);
 
 // Export Router
 module.exports = router;

@@ -1,1 +1,50 @@
-<p>profile works!</p>
+<div class="profile-container">
+
+    <mat-card class="profile-card">
+
+        <div class="avatar">
+            👤
+        </div>
+
+        <h2>{{ user.name }}</h2>
+
+        <p class="email">
+            {{ user.email }}
+        </p>
+
+        <div class="info">
+
+            <div>
+
+                <strong>Role</strong>
+
+                <p>{{ user.role }}</p>
+
+            </div>
+
+            <div>
+
+                <strong>Email Verified</strong>
+
+                <p>
+
+                    {{ user.isVerified ? '✅ Verified' : '❌ Not Verified' }}
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <button
+            mat-raised-button
+            color="warn"
+            (click)="logout()">
+
+            Logout
+
+        </button>
+
+    </mat-card>
+
+</div>

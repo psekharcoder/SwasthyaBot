@@ -38,7 +38,7 @@ export class ApiService {
 
   }
 
-  chat(message: string, token: string) {
+  chat(message: string, conversationId: string, token: string) {
 
     return this.http.post(
 
@@ -46,7 +46,8 @@ export class ApiService {
 
       {
 
-        message
+        message,
+        conversationId
 
       },
 
@@ -63,12 +64,71 @@ export class ApiService {
     );
 
   }
-
   getHistory(token: string) {
 
     return this.http.get(
 
       `${this.api}/chat/history`,
+
+      {
+
+        headers: {
+
+          Authorization: `Bearer ${token}`
+
+        }
+
+      }
+
+    );
+
+  }
+
+  getConversations(token: string) {
+
+    return this.http.get(
+
+      `${this.api}/conversation`,
+
+      {
+
+        headers: {
+
+          Authorization: `Bearer ${token}`
+
+        }
+
+      }
+
+    );
+
+  }
+
+  getConversation(id: string, token: string) {
+
+    return this.http.get(
+
+      `${this.api}/conversation/${id}`,
+
+      {
+
+        headers: {
+
+          Authorization: `Bearer ${token}`
+
+        }
+
+      }
+
+    );
+
+  }
+
+  getProfile(token: string) {
+
+    return this.http.get(
+
+      `${this.api}/auth/profile`,
 
       {
 

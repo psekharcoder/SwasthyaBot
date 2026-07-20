@@ -16,7 +16,7 @@
             Recent Chats
         </h3>
 
-        <button class="history-item" *ngFor="let conv of chat.conversations" (click)="chat.selectConversation(conv.id)">
+        <button class="history-item" *ngFor="let conv of chat.conversations" (click)="openConversation(conv._id)">
 
             💬 {{ conv.title }}
 

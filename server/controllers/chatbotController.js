@@ -1,6 +1,8 @@
 // Import OpenAI SDK
 const OpenAI = require("openai");
 
+const Conversation = require("../models/Conversation");
+
 // Import Chat Model
 const Chat = require("../models/Chat");
 
@@ -20,7 +22,7 @@ const chatWithAI = async (req, res) => {
 
     try {
 
-        const { message } = req.body;
+        const { message, conversationId } = req.body;
 
         if (!message) {
 
@@ -35,22 +37,54 @@ const chatWithAI = async (req, res) => {
         }
 
         // ======================================
-        // Fetch Previous Chats
+        // Find/Create Conversation
+        // ======================================
+
+        let conversation;
+
+        if (conversationId) {
+
+            conversation = await Conversation.findOne({
+
+                _id: conversationId,
+
+                user: req.user.id
+
+            });
+
+        }
+
+        if (!conversation) {
+
+            conversation = await Conversation.create({
+
+                user: req.user.id,
+
+                title:
+                    message.length > 30
+                        ? message.substring(0, 30) + "..."
+                        : message
+
+            });
+
+        }
+
+        // ======================================
+        // Previous Messages
         // ======================================
 
         const previousChats = await Chat.find({
 
-            user: req.user.id
+            conversation: conversation._id
 
-        })
-            .sort({ createdAt: -1 })
-            .limit(5);
+        }).sort({
 
-        // Put them back into chronological order
-        previousChats.reverse();
+            createdAt: 1
+
+        });
 
         // ======================================
-        // Build Conversation History
+        // AI Messages
         // ======================================
 
         const messages = [
@@ -62,64 +96,28 @@ const chatWithAI = async (req, res) => {
                 content: `
 You are SwasthyaBot 🩺, an AI Healthcare Assistant.
 
-Your job is ONLY to answer healthcare and medical-related questions.
+You ONLY answer healthcare and medical related questions.
 
-You may answer questions about:
-- Diseases
-- Symptoms
-- Medicines
-- First Aid
-- Nutrition
-- Fitness
-- Exercise
-- Mental Health
-- Pregnancy
-- Child Health
-- Vaccination
-- Healthy Lifestyle
-- Medical Tests
-- General Wellness
-
-If the user asks anything NOT related to healthcare such as:
-- Mathematics
-- Programming
-- Coding
-- Movies
-- Songs
-- Sports
-- Cricket
-- Politics
-- History
-- Geography
-- News
-- Weather
-- General Knowledge
-- Personal opinions
-
-DO NOT answer.
-
-Instead reply ONLY with:
+If the question is not healthcare related, reply ONLY:
 
 "🩺 I'm SwasthyaBot and I can only assist with healthcare-related questions. Please ask me something about health, medicine, fitness, nutrition, or wellness."
 
-Never break these rules.
 Never answer non-health questions.
-Always stay within healthcare.
 `
 
             }
 
         ];
 
-        // Add previous chats
+        // Previous Conversation
 
-        for (const chat of previousChats) {
+        previousChats.forEach(chat => {
 
             messages.push({
 
                 role: "user",
 
-                content: chat.question
+                content: chat.message
 
             });
 
@@ -127,13 +125,13 @@ Always stay within healthcare.
 
                 role: "assistant",
 
-                content: chat.answer
+                content: chat.response
 
             });
 
-        }
+        });
 
-        // Add current user message
+        // Current Message
 
         messages.push({
 
@@ -144,7 +142,7 @@ Always stay within healthcare.
         });
 
         // ======================================
-        // Send to Groq
+        // Ask Groq
         // ======================================
 
         const completion = await client.chat.completions.create({
@@ -155,33 +153,35 @@ Always stay within healthcare.
 
         });
 
-        // AI Reply
-
         const aiReply = completion.choices[0].message.content;
 
         // ======================================
-        // Save Chat to MongoDB
+        // Save Chat
         // ======================================
 
         await Chat.create({
 
+            conversation: conversation._id,
+
             user: req.user.id,
 
-            question: message,
+            message,
 
-            answer: aiReply
+            response: aiReply
 
         });
 
         // ======================================
-        // Return Response
+        // Return
         // ======================================
 
         res.status(200).json({
 
             success: true,
 
-            reply: aiReply
+            reply: aiReply,
+
+            conversationId: conversation._id
 
         });
 
@@ -190,19 +190,6 @@ Always stay within healthcare.
     catch (error) {
 
         console.error(error);
-
-        if (error.status === 429) {
-
-            return res.status(429).json({
-
-                success: false,
-
-                message:
-                    "Daily AI limit reached. Please try again later."
-
-            });
-
-        }
 
         res.status(500).json({
 
@@ -213,6 +200,7 @@ Always stay within healthcare.
         });
 
     }
+
 };
 // ======================================
 // Get Chat History

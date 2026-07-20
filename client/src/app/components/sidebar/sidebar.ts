@@ -12,20 +12,16 @@ import { Chat } from '../../services/chat';
 })
 export class Sidebar implements OnInit {
 
-  history: any[] = [];
-
   @Output() newChatClicked = new EventEmitter<void>();
-
-  newChat() {
-
-    this.newChatClicked.emit();
-
-  }
 
   constructor(
     private api: ApiService,
     public chat: Chat
   ) { }
+
+  newChat() {
+    this.newChatClicked.emit();
+  }
 
   ngOnInit() {
 
@@ -33,11 +29,72 @@ export class Sidebar implements OnInit {
 
     if (!token) return;
 
-    this.api.getHistory(token).subscribe({
+    this.api.getConversations(token).subscribe({
 
       next: (res: any) => {
 
-        this.history = res.history;
+        this.chat.conversations = res.conversations.map((conv: any) => ({
+
+  _id: conv._id,
+
+  title: conv.title,
+
+  messages: []
+
+}));
+      },
+
+      error: (err) => {
+
+        console.log(err);
+
+      }
+
+    });
+
+  }
+
+  openConversation(id: string) {
+
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    this.api.getConversation(id, token).subscribe({
+
+      next: (res: any) => {
+
+        this.chat.currentConversationId = id;
+
+        this.chat.currentChat = {
+
+          _id: id,
+
+          title: res.conversation.title,
+
+          messages: []
+
+        };
+
+        for (const item of res.chats) {
+
+          this.chat.currentChat.messages.push({
+
+            sender: "user",
+
+            text: item.message
+
+          });
+
+          this.chat.currentChat.messages.push({
+
+            sender: "bot",
+
+            text: item.response
+
+          });
+
+        }
 
       },
 

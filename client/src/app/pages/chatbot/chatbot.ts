@@ -10,7 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../services/api';
-import { Message } from '../../models/message';
+
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -45,7 +45,7 @@ export class Chatbot {
 
   isTyping = false;
 
-  
+
 
   @ViewChild('chatBody')
 
@@ -55,10 +55,15 @@ export class Chatbot {
   startNewChat() {
 
     this.chat.clearChat();
+
+    this.chat.currentConversationId = "";
+
     this.message = "";
 
     setTimeout(() => {
+
       this.chatBody.nativeElement.scrollTop = 0;
+
     }, 100);
 
   }
@@ -74,14 +79,13 @@ export class Chatbot {
 
     this.chat.addUserMessage(this.message);
 
-
     this.scrollToBottom();
 
     const userMessage = this.message;
 
-    this.message = '';
+    this.message = "";
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
 
     if (!token) {
 
@@ -93,13 +97,30 @@ export class Chatbot {
 
     this.isTyping = true;
 
-    this.api.chat(userMessage, token).subscribe({
+    this.api.chat(
+
+      userMessage,
+
+      this.chat.currentConversationId,
+
+      token
+
+    ).subscribe({
 
       next: (res: any) => {
 
         this.isTyping = false;
 
         this.chat.addBotMessage(res.reply);
+
+        // Save conversation id only once
+        if (!this.chat.currentConversationId) {
+
+          this.chat.currentConversationId = res.conversationId;
+
+          this.chat.currentChat._id = res.conversationId;
+
+        }
 
         this.scrollToBottom();
 
