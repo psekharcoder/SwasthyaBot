@@ -124,6 +124,52 @@ export class ApiService {
 
   }
 
+  deleteConversation(id: string, token: string) {
+
+  return this.http.delete(
+
+    `${this.api}/conversation/${id}`,
+
+    {
+
+      headers: {
+
+        Authorization: `Bearer ${token}`
+
+      }
+
+    }
+
+  );
+
+}
+
+renameConversation(id: string, title: string, token: string) {
+
+  return this.http.put(
+
+    `${this.api}/conversation/${id}`,
+
+    {
+
+      title
+
+    },
+
+    {
+
+      headers: {
+
+        Authorization: `Bearer ${token}`
+
+      }
+
+    }
+
+  );
+
+}
+
   getProfile(token: string) {
 
     return this.http.get(
@@ -143,6 +189,32 @@ export class ApiService {
     );
 
   }
+
+  uploadFile(file: File, token: string) {
+
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  return this.http.post(
+
+    `${this.api}/upload`,
+
+    formData,
+
+    {
+
+      headers: {
+
+        Authorization: `Bearer ${token}`
+
+      }
+
+    }
+
+  );
+
+}
 
 
 }

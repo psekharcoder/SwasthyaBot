@@ -7,8 +7,9 @@ const authMiddleware = require("../middleware/authMiddleware");
 const {
 
     getConversations,
-
-    getConversation
+    getConversation,
+    deleteConversation,
+    renameConversation
 
 } = require("../controllers/conversationController");
 
@@ -29,6 +30,26 @@ router.get(
     authMiddleware,
 
     getConversation
+
+);
+
+router.delete(
+
+    "/:id",
+
+    authMiddleware,
+
+    deleteConversation
+
+);
+
+router.put(
+
+    "/:id",
+
+    authMiddleware,
+
+    renameConversation
 
 );
 

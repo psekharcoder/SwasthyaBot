@@ -19,11 +19,21 @@ export class Sidebar implements OnInit {
     public chat: Chat
   ) { }
 
+  // ==========================
+  // New Chat
+  // ==========================
+
   newChat() {
     this.newChatClicked.emit();
   }
 
+  // ==========================
+  // Load Conversations
+  // ==========================
+
   ngOnInit() {
+
+    console.log("Sidebar Loaded");
 
     const token = localStorage.getItem("token");
 
@@ -33,15 +43,20 @@ export class Sidebar implements OnInit {
 
       next: (res: any) => {
 
+        console.log("Loaded conversations:", res.conversations);
+
         this.chat.conversations = res.conversations.map((conv: any) => ({
 
-  _id: conv._id,
+          _id: conv._id,
 
-  title: conv.title,
+          title: conv.title,
 
-  messages: []
+          messages: []
 
-}));
+        }));
+
+        console.log("Chat conversations:", this.chat.conversations);
+
       },
 
       error: (err) => {
@@ -54,7 +69,14 @@ export class Sidebar implements OnInit {
 
   }
 
+  // ==========================
+  // Open Conversation
+  // ==========================
+
+
   openConversation(id: string) {
+
+    console.log("Open conversation:", id);
 
     const token = localStorage.getItem("token");
 
@@ -107,5 +129,101 @@ export class Sidebar implements OnInit {
     });
 
   }
+
+  // ==========================
+  // Delete Conversation
+  // ==========================
+
+  deleteConversation(id: string, event: Event) {
+
+      console.log("Delete clicked");
+
+    // Prevent opening conversation when clicking delete
+    event.stopPropagation();
+
+    const token = localStorage.getItem("token");
+
+    if (!token) return;
+
+    if (!confirm("Delete this conversation?")) return;
+
+    this.api.deleteConversation(id, token).subscribe({
+
+      next: () => {
+
+        // Remove from sidebar
+        this.chat.conversations =
+          this.chat.conversations.filter(c => c._id !== id);
+
+        // If current conversation was deleted
+        if (this.chat.currentConversationId === id) {
+
+          this.chat.clearChat();
+
+        }
+
+      },
+
+      error: (err) => {
+
+        console.log(err);
+
+      }
+
+    });
+
+  }
+
+  renameConversation(id: string, currentTitle: string, event: Event) {
+      console.log("Rename clicked");
+
+  event.stopPropagation();
+
+  const token = localStorage.getItem("token");
+
+  if (!token) return;
+
+  const newTitle = prompt("Enter new title:", currentTitle);
+
+  if (!newTitle || newTitle.trim() === "") return;
+
+  this.api.renameConversation(id, newTitle, token).subscribe({
+
+    next: (res: any) => {
+
+      const chat = this.chat.conversations.find(c => c._id === id);
+
+      if (chat) {
+
+        chat.title = res.conversation.title;
+
+      }
+
+      if (this.chat.currentConversationId === id) {
+
+        this.chat.currentChat.title = res.conversation.title;
+
+      }
+
+    },
+
+    error: (err) => {
+
+      console.log(err);
+
+    }
+
+  });
+
+}
+
+openWhatsApp() {
+
+  window.open(
+    "https://wa.me/917396630673",
+    "_blank"
+  );
+
+}
 
 }

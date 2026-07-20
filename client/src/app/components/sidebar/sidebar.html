@@ -6,28 +6,59 @@
 
     <div class="menu">
 
+        <!-- New Chat -->
         <button class="menu-btn" (click)="newChat()">
-
             ➕ New Chat
-
         </button>
 
+        <!-- History -->
         <h3 class="history-title">
             Recent Chats
         </h3>
 
-        <button class="history-item" *ngFor="let conv of chat.conversations" (click)="openConversation(conv._id)">
+        <!-- Conversation List -->
+        <div class="history-item" *ngFor="let conv of chat.conversations">
 
-            💬 {{ conv.title }}
+            <!-- Conversation Title -->
+            <span class="history-text" (click)="openConversation(conv._id)">
 
-        </button>
+                💬 {{ conv.title }}
 
+            </span>
+
+            <!-- Action Buttons -->
+            <div class="actions">
+
+                <!-- Rename -->
+                <button class="icon-btn" (click)="renameConversation(conv._id, conv.title, $event)">
+
+                    ✏️
+
+                </button>
+
+                <!-- Delete -->
+                <button class="icon-btn" (click)="deleteConversation(conv._id, $event)">
+
+                    🗑️
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Profile -->
         <button class="menu-btn">
             👤 Profile
         </button>
 
     </div>
 
+    <button class="menu-btn whatsapp" (click)="openWhatsApp()">
+        📱 WhatsApp AI
+    </button>
+
+    <!-- Logout -->
     <button class="menu-btn logout">
         🚪 Logout
     </button>

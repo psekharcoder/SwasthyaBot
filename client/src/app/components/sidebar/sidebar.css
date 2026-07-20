@@ -135,3 +135,85 @@
     background:#1976d2;
 
 }
+
+.history-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    width:100%;
+    padding:10px 12px;
+    margin-bottom:10px;
+
+    background:#34415a;
+    border-radius:10px;
+}
+
+.history-text{
+    flex:1;
+
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+
+    cursor:pointer;
+
+    color:white;
+    font-size:14px;
+}
+
+
+.history-title{
+
+    flex:1;
+
+    overflow:hidden;
+
+    white-space:nowrap;
+
+    text-overflow:ellipsis;
+
+    cursor:pointer;
+
+}
+
+
+.delete-btn{
+
+    flex-shrink:0;
+
+    background:none;
+
+    border:none;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+}
+.delete-btn:hover{
+
+    color:red;
+
+}
+
+.actions{
+    display:flex;
+    gap:6px;
+    margin-left:10px;
+
+    flex-shrink:0;
+}
+
+.whatsapp {
+
+    background: #25D366;
+    color: white;
+
+}
+
+.whatsapp:hover {
+
+    background: #1ebd5a;
+
+}

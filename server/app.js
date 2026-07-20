@@ -7,6 +7,8 @@ const chatbotRoutes = require("./routes/chatbotRoutes");
 
 const conversationRoutes = require("./routes/conversationRoutes");
 
+const uploadRoutes = require("./routes/uploadRoutes");
+
 // Allows the frontend (Angular) and backend (Express) to communicate
 // even if they run on different ports (e.g., Angular:4200, Express:5000)
 const cors = require("cors");
@@ -44,6 +46,7 @@ app.use("/api/chat", chatbotRoutes);
 
 app.use("/api/conversation", conversationRoutes);
 
+app.use("/api/upload", uploadRoutes);
 
 // =====================
 // Test Routes

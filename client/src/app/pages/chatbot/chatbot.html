@@ -84,14 +84,42 @@
       <!-- Footer -->
       <div class="chat-footer">
 
+        <!-- Upload Button -->
+        <button mat-mini-fab color="primary" (click)="fileInput.click()">
+
+          📎
+
+        </button>
+
+        <!-- Hidden File Picker -->
+        <input type="file" hidden #fileInput (change)="onFileSelected($event)">
+
+        <!-- Message Box -->
         <mat-form-field appearance="outline" class="message-box">
 
           <input matInput placeholder="Ask your health question..." [(ngModel)]="message" (keyup.enter)="sendMessage()">
 
         </mat-form-field>
 
+        <!-- Mic -->
+        <button mat-fab color="accent" (click)="startListening()">
+
+          {{ isListening ? '🎙️' : '🎤' }}
+
+        </button>
+
+        <!-- Send -->
         <button mat-fab color="primary" (click)="sendMessage()">
+
           ➤
+
+        </button>
+
+        <!-- Voice -->
+        <button mat-fab color="warn" (click)="toggleVoice()">
+
+          {{ voiceEnabled ? '🔊' : '🔇' }}
+
         </button>
 
       </div>

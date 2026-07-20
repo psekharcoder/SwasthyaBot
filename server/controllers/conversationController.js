@@ -111,10 +111,154 @@ const getConversation = async (req, res) => {
 
 };
 
+// =======================================
+// Delete Conversation
+// =======================================
+
+const deleteConversation = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        // Delete all chats inside this conversation
+        await Chat.deleteMany({
+
+            conversation: id,
+
+            user: req.user.id
+
+        });
+
+        // Delete conversation
+        await Conversation.findOneAndDelete({
+
+            _id: id,
+
+            user: req.user.id
+
+        });
+
+        res.status(200).json({
+
+            success: true,
+
+            message: "Conversation deleted successfully."
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            success: false,
+
+            message: "Failed to delete conversation."
+
+        });
+
+    }
+
+};
+
+// =======================================
+// Rename Conversation
+// =======================================
+
+const renameConversation = async (req, res) => {
+
+     console.log("Rename route hit");
+
+    try {
+
+        const { id } = req.params;
+
+        const { title } = req.body;
+
+        if (!title || title.trim() === "") {
+
+            return res.status(400).json({
+
+                success: false,
+
+                message: "Title is required."
+
+            });
+
+        }
+
+        const conversation = await Conversation.findOneAndUpdate(
+
+            {
+
+                _id: id,
+
+                user: req.user.id
+
+            },
+
+            {
+
+                title: title.trim()
+
+            },
+
+            {
+
+                new: true
+
+            }
+
+        );
+
+        if (!conversation) {
+
+            return res.status(404).json({
+
+                success: false,
+
+                message: "Conversation not found."
+
+            });
+
+        }
+
+        res.status(200).json({
+
+            success: true,
+
+            conversation
+
+        });
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            success: false,
+
+            message: "Failed to rename conversation."
+
+        });
+
+    }
+
+};
+
 module.exports = {
 
     getConversations,
-
-    getConversation
+    getConversation,
+    deleteConversation,
+    renameConversation
 
 };
+
